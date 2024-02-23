@@ -9,6 +9,8 @@ namespace HTMLToQPDF.Example.Utilities
     {
         public static void Create(string html, string path, bool customStyles)
         {
+            QuestPDF.Settings.License = LicenseType.Community;
+
             Document.Create(container =>
             {
                 container.Page(page =>
