@@ -1,4 +1,5 @@
 ﻿using QuestPDF.Infrastructure;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HTMLToQPDF.Utils
 {
@@ -21,6 +22,19 @@ namespace HTMLToQPDF.Utils
                     _ => throw new ArgumentOutOfRangeException("unit", unit, null),
                 };
             }
+        }
+
+        public static Unit ExtractUnit(string unitAbbr)
+        {
+            return unitAbbr.ToLower() switch
+            {
+                "in" => Unit.Inch,
+                "cm" => Unit.Centimetre,
+                "px" => Unit.Point,
+                "mm" => Unit.Millimetre,
+                "ft" => Unit.Feet,
+                _ => Unit.Point
+            };
         }
     }
 }
