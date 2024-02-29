@@ -5,6 +5,7 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using System.Diagnostics;
 using HTMLToQPDF.Utils;
+using SkiaSharp;
 
 namespace HTMLQuestPDF.Components.Tags
 {
@@ -24,11 +25,15 @@ namespace HTMLQuestPDF.Components.Tags
             var width = 200.0f;
             var unitWidth = Unit.Point;
             var unitHeight = Unit.Point;
-            var height = 100.0f;
+            var height = 0.0f;
             var unitMaxHeight = Unit.Point;
             var maxHeight = 100.0f;
 
             var img = getImgBySrc(src) ?? Placeholders.Image(200, 100);
+            
+            SKImage skImg;
+            skImg = SKImage.FromEncodedData(img);
+            //Debug.WriteLine("Breite: " + skImg.Width.ToString() +", Länge: " + skImg?.Height.ToString());
 
             string[] styleSplit = style.Split(';');
 
@@ -69,10 +74,14 @@ namespace HTMLQuestPDF.Components.Tags
                 //Debug.WriteLine(element);
             }
             
-            if (height == 0)
+            if (height == 0.0f)
             {
-                height = maxHeight;
-                unitHeight = unitMaxHeight;
+                height = skImg.Height;
+                if (height < 150.0f)
+                    height = 75.0f;
+                else
+                    height = height * 0.5f;
+                unitHeight = Unit.Point;
             }
             
             //Debug.WriteLine(height);
@@ -88,6 +97,7 @@ namespace HTMLQuestPDF.Components.Tags
             
             //container.Image(img);
             //container.Height(height, unitHeight).Width(width, unitWidth).Image(img).FitUnproportionally();
+            // if height = null container.maxheight(7.0f, unit.cm).Image(img).fitarea()
             container.Height(height, unitHeight).Image(img).FitArea();
         }
     }
